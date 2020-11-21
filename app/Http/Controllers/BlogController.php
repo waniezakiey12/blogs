@@ -14,7 +14,8 @@ class BlogController extends Controller
      */
     public function index() // /blogs -> get
     {
-        return 'asdasd';
+        $blogs = Blog::paginate(2);
+        return view('blogs.index', compact('blogs'));
     }
 
     /**
@@ -24,7 +25,7 @@ class BlogController extends Controller
      */
     public function create() //blogs/create
     {
-        //
+        return view('blogs.create');
     }
 
     /**
@@ -35,7 +36,13 @@ class BlogController extends Controller
      */
     public function store(Request $request) //blogs -> post
     {
-        //
+        $reqs = $request->validate([
+            'name' => 'required',
+            'text' => 'required'
+        ]);
+        $reqs['user_id'] = 1;
+        Blog::create($reqs);
+        return redirect('/blogs');
     }
 
     /**
@@ -57,7 +64,7 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog) // blogs/1/edit
     {
-        //
+       return view('blogs.edit', compact('blog'));
     }
 
     /**
@@ -69,7 +76,13 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog) // blogs/1 ->patch/->put
     {
-        //
+        $reqs = $request->validate([
+            'name' => 'required',
+            'text' => 'required'
+        ]);
+
+        $blog->update($reqs);
+        return redirect('/blogs');
     }
 
     /**
@@ -80,6 +93,7 @@ class BlogController extends Controller
      */
     public function destroy(Blog $blog) // blogs/1 -> delete
     {
-        //
+        $blog->delete();
+        return redirect('/blogs');
     }
 }
